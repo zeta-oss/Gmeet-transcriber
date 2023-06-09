@@ -1,0 +1,13 @@
+version: '3'
+services:
+    node-web: 
+      command: npm run dev
+      build: '.'
+      ports:
+        - '8080:8080'
+      depends_on: 
+        - redis
+    redis: 
+      image: redislabs/redismod:latest
+      ports:
+        - '6379:6379'

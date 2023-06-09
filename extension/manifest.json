@@ -1,0 +1,11 @@
+{
+    "manifest_version": 2,
+    "name": "Gmeet Transcriber",
+    "description": "This extension shows how to transcribe the meet captions",
+    "version": "1.0",
+    "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "index.html"
+    },
+    "permissions": ["tabs"]
+}
