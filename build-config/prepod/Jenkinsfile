@@ -1,0 +1,7 @@
+@Library("devops@master") _
+transcribejob(
+    nodeVersion: '18.9.0',
+    compileScriptPath: 'build-config/preprod/compile.sh',
+    env: 'preprod',
+    buildFolder: '/'
+)
