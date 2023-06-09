@@ -1,0 +1,5 @@
+.env
+extension
+dump.rdb
+node_modules
+test.js
