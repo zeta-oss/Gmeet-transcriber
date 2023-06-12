@@ -14,7 +14,7 @@ pipeline {
                 docker build . -f Dockerfile -t transcribe
             }
         }
-        stage('docker run') {
+        stage('docker run') { 
             steps {
                 docker run transcribe 
             }

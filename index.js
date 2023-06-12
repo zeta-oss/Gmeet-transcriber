@@ -92,7 +92,7 @@ const getdata=async(user)=>{
 };  
 
 const config=new Configuration({
-  apiKey: "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"
+  apiKey: "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"
 });
 
 const openai=new OpenAIApi(config);
@@ -102,7 +102,7 @@ const response_ai=await openai.createCompletion({
   model: "text-davinci-003",
   prompt: `Summarize the text and ignore the html tags and css : ${text}`,
   temperature: 1,
-  max_tokens: 600,
+  max_tokens: 2000,
   top_p: 1,
   frequency_penalty: 0.6,
   presence_penalty: 0.6,
@@ -195,11 +195,12 @@ app.get('/index-path',(req,resp)=>{
 
  // const cname=req.query.name;
  console.log("entered ");
+ 
  // mailpubsub("preetish@eta.tech");
  var config = {
   method: 'get',
   headers: { 
-    'Authorization': 'Bearer ya29.a0AWY7CknHh7C-lSLmlCNG32KzbKWth-9Nha1nCmaSREPezZKjHTa17Rm2ujdzBC_S8kdSjFzQDk7XEnwI7nJ3sgHX8c1k4i_GT94w14zaqDsJeyAI_Uk4_R7p-mBJZGFkicNRykkOq2nQLE_i02Lpl7Crjty5SAaCgYKAbUSARMSFQG1tDrpHUScjZV2UyOhPfW7q4WyVA0165',
+    'Authorization': 'Bearer ya29.a0AWY7CkkrvaGqsWuleSzdzToza6ot-dpD0E0mpqqby3H_UsJUy9DKv25BWESLiIcIcQ0Ld1CDiubXtLI8DY9ZvkE8SnePk9d1G3GbNobOX5QBr84jXGUQI9jvrueeV9ocXpwy8wYAAKmKUjoMptw3gw3vRi569waCgYKAeESARMSFQG1tDrppc7Rzp_KqrP_pyuv3BREvg0165',
     'Content-Type':'application/json',
     'Accept-type':'application/json'
   }
@@ -220,6 +221,13 @@ app.get('/index-path',(req,resp)=>{
           for  (let id of msgids) {
             
             let flag=false;
+            if(1==1) {
+              fs.readFile('./transcript.csv','utf8',(err,data)=>{
+                 if(2==2) {
+                
+              
+            
+             
 
 
            // console.log(`ksjdkjdhisdhisdi${id}`);
@@ -344,13 +352,12 @@ app.get('/index-path',(req,resp)=>{
           }
           const headersstr=headers1.join(",");
           const rowsstr=rows1.join(",");
-
-          fs.writeFileSync('empdata.txt',ftxtres,'utf8',(err)=>{
+          fs.writeFileSync(`empdata${ftxtres.length}.txt`,ftxtres,'utf8',(err)=>{
             if(err) {
               console.log(err);
             }
           });
-          fs.writeFileSync('transcribe.html',htmlres,'utf8',(err)=>{
+          fs.writeFileSync(`transcribe${ftxtres.length}.html`,htmlres,'utf8',(err)=>{
             if(err){
               console.log(err);
             }
@@ -362,11 +369,12 @@ app.get('/index-path',(req,resp)=>{
             }
           });
           let csvrows=`${headersstr}\n${rowsstr}`;
-          fs.writeFileSync('transcript.csv',csvrows,'utf8',(err)=>{
+          fs.writeFileSync(`transcript${ftxtres.length}.csv`,csvrows,'utf8',(err)=>{
             if(err) {
               console.log(err);
             }
           });
+
         }
         }
 
@@ -387,10 +395,14 @@ app.get('/index-path',(req,resp)=>{
     })();
     console.log(flag);
 
-    if(flag==true) break;
+  }
+});
+            }
     }
   }).catch(err=>console.log(err));
        })();
+     
+
 
           
           resp.status(200).send(`Done`);
@@ -422,6 +434,11 @@ app.get('/midpage',async (req,resp)=>{
 
 
   resp.status(200).redirect(`/dashboard?name=${name}`);
+});
+
+
+app.get('/logout',async(req,resp)=>{
+
 });
 
 app.get("/dashboard", async (req,resp)=>{
