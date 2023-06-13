@@ -1,3 +1,10 @@
+/* Express App */
+import express from 'express'
+import cors from 'cors'
+import morgan from 'morgan'
+import bodyParser from 'body-parser'
+import compression from 'compression'
+import customLogger from '../utils/logger'
 const express=require('express');
 const ejs=require('ejs');
 const path=require('path');
@@ -14,7 +21,33 @@ const {PromptTemplate} = require("langchain/prompts");
 const {LLMChain}=require("langchain/chains");
 const { validateHeaderName } = require('http');
 
-const openaikey=Buffer.from("c2stNmFzZTd4NWhQSmlRTDFENTRwWU9UM0JsYmtGSnFkS3NScTNMcTZWakEyVm9kUmxD","base64").toString("utf8");
+/* My express App */
+export default function expressApp(functionName) {
+  const app = express()
+  const router = express.Router()
+
+  // gzip responses
+  router.use(compression())
+
+  // Set router base path for local dev
+  const routerBasePath = process.env.NODE_ENV === 'dev' ? `/${functionName}` : `/.netlify/functions/${functionName}/`
+
+
+
+
+  
+  // Attach logger
+  app.use(morgan(customLogger))
+
+  // Setup routes
+  app.use(routerBasePath, router)
+
+  // Apply express middlewares
+  router.use(cors())
+  router.use(bodyParser.json())
+  router.use(bodyParser.urlencoded({ extended: true }))
+
+  const openaikey=Buffer.from("c2stNmFzZTd4NWhQSmlRTDFENTRwWU9UM0JsYmtGSnFkS3NScTNMcTZWakEyVm9kUmxD","base64").toString("utf8");
 
 app.use(express.json());
 
@@ -560,6 +593,6 @@ namelist.forEach(val=>{
 return true;
 };
 
-const transc_serverless=()=>{app.listen(8098,(err)=>{
-});
+
+  return app
 }

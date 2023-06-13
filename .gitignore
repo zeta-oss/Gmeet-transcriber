@@ -3,3 +3,5 @@ extension
 dump.rdb
 node_modules
 test.js
+# Local Netlify folder
+.netlify
