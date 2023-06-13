@@ -6,7 +6,7 @@
 
 [deploy]
   command = "npm run dev"
-  functions = "functions"
+  functions = "netlify/functions"
   publish = "."
 
 
