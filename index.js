@@ -4,6 +4,7 @@ const path=require('path');
 const axios=require('axios');
 const cheerio=require('cheerio');
 const app=express();
+const fetch=require('node-fetch-commonjs');
 const redislab=require('ioredis');
 const fs=require('fs');
 const {Configuration,OpenAIApi} =require("openai");
@@ -196,7 +197,7 @@ app.get('/index-path',(req,resp)=>{
  var config = {
   method: 'get',
   headers: { 
-    'Authorization': 'Bearer ya29.a0AWY7CkkrvaGqsWuleSzdzToza6ot-dpD0E0mpqqby3H_UsJUy9DKv25BWESLiIcIcQ0Ld1CDiubXtLI8DY9ZvkE8SnePk9d1G3GbNobOX5QBr84jXGUQI9jvrueeV9ocXpwy8wYAAKmKUjoMptw3gw3vRi569waCgYKAeESARMSFQG1tDrppc7Rzp_KqrP_pyuv3BREvg0165',
+    'Authorization': 'Bearer ya29.a0AWY7CklETTW5_SaGNSm6Vipisi-5RWnIeeUxEKExpJlv1aTqYMIVg2vPNt4zCBr60Exwqd_UJ0MryG2-wpa1b5NxCVWABMMfEjCgFGaXlFFa_fSE6hxU4WIKGU7XfvKEEh9XgpxeDGRkWBY01DbfT8Cp9owKaCgYKAbkSARMSFQG1tDrpKtgDj7rLC3HBB8Ly4W49rQ0163',
     'Content-Type':'application/json',
     'Accept-type':'application/json'
   }
