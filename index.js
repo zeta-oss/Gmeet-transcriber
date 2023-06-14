@@ -555,7 +555,5 @@ namelist.forEach(val=>{
 });
 return true;
 };
-
-const transc_serverless=()=>{app.listen(8098,(err)=>{
+app.listen(8098,(err)=>{
 });
-}
