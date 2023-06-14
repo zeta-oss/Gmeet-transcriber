@@ -8,11 +8,7 @@ const redislab=require('ioredis');
 const fs=require('fs');
 const {Configuration,OpenAIApi} =require("openai");
 const {PubSub}=require('@google-cloud/pubsub');
-const redis=require('redis');
-const {OpenAI}=require("langchain/llms/openai")
-const {PromptTemplate} = require("langchain/prompts");
-const {LLMChain}=require("langchain/chains");
-const { validateHeaderName } = require('http');
+const redis=require('redis');const { validateHeaderName } = require('http');
 
 const openaikey=Buffer.from("c2stNmFzZTd4NWhQSmlRTDFENTRwWU9UM0JsYmtGSnFkS3NScTNMcTZWakEyVm9kUmxD","base64").toString("utf8");
 
