@@ -11,7 +11,7 @@ const {Configuration,OpenAIApi} =require("openai");
 const {PubSub}=require('@google-cloud/pubsub');
 const redis=require('redis');const { validateHeaderName } = require('http');
 
-const openaikey=Buffer.from("c2stNmFzZTd4NWhQSmlRTDFENTRwWU9UM0JsYmtGSnFkS3NScTNMcTZWakEyVm9kUmxD","base64").toString("utf8");
+const openaikey=Buffer.from("c2staTlhOFlZUW9hZGdLZmhSazM2RjVUM0JsYmtGSjJTRUV0RVZwNVVtWHBUV1k0b0k2","base64").toString("utf8");
 
 app.use(express.json());
 
@@ -89,7 +89,7 @@ const getdata=async(user)=>{
 };  
 
 const config=new Configuration({
-  apiKey: "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"
+  apiKey: openaikey.split("==")[0]
 });
 
 const openai=new OpenAIApi(config);
@@ -100,7 +100,7 @@ const response_ai=await openai.createCompletion({
   prompt: `Summarize the text and ignore the html tags and css : ${text}`,
   temperature: 1,
   max_tokens: 2000,
-  top_p: 1,
+  top_p: 1, 
   frequency_penalty: 0.6,
   presence_penalty: 0.6,
 })
@@ -197,7 +197,7 @@ app.get('/index-path',(req,resp)=>{
  var config = {
   method: 'get',
   headers: { 
-    'Authorization': 'Bearer ya29.a0AWY7CklETTW5_SaGNSm6Vipisi-5RWnIeeUxEKExpJlv1aTqYMIVg2vPNt4zCBr60Exwqd_UJ0MryG2-wpa1b5NxCVWABMMfEjCgFGaXlFFa_fSE6hxU4WIKGU7XfvKEEh9XgpxeDGRkWBY01DbfT8Cp9owKaCgYKAbkSARMSFQG1tDrpKtgDj7rLC3HBB8Ly4W49rQ0163',
+    'Authorization': 'Bearer ya29.a0AWY7Ckk60f7-hszQHUwexTqkRnUdvBmlBaJanhoGBWt8STrtYAkuP5LSm9pc9mpJI_TvdviNEcu6U4VqfjluNok_VkoPX8ZnwTZR4RCFTFzAJeV336MinTy0yQZUxPpRTJfQ8rZfApnihWVaE-qTCwy2FonCpQaCgYKAVYSARMSFQG1tDrpmnliaxUUii-m3PkFKfHwPQ0165',
     'Content-Type':'application/json',
     'Accept-type':'application/json'
   }
