@@ -11,7 +11,7 @@ const {Configuration,OpenAIApi} =require("openai");
 const {PubSub}=require('@google-cloud/pubsub');
 const redis=require('redis');const { validateHeaderName } = require('http');
 
-const openaikey=Buffer.from("c2staTlhOFlZUW9hZGdLZmhSazM2RjVUM0JsYmtGSjJTRUV0RVZwNVVtWHBUV1k0b0k2","base64").toString("utf8");
+const openaikey=Buffer.from("c2stMHhHZmJPenVvQ1N1aTFmbnZXVnhUM0JsYmtGSmVwZm9WSFVzNTVFRkdOQU9xbUcz","base64").toString("utf8");
 
 app.use(express.json());
 
@@ -22,70 +22,21 @@ app.set('views',path.join(__dirname,'views/partials'));
 app.use('/', express.static(__dirname));
 
 
-const pubsubClient=new PubSub();
-
-const mailpubsub=(subscriptionemailid)=>{
-  const subscription= pubsubClient.subscription(subscriptionemailid);
-  const messageHandler = message => {
-    console.log(`Received message ${message.id}:`);
-    console.log(`\tData: ${message.data}`);
-    console.log(`\tAttributes: ${message.attributes}`);
-
-    // "Ack" (acknowledge receipt of) the message
-    message.ack();
-  };
-
-  // Listen for new messages until timeout is hit
-  setInterval(()=>{
-  subscription.on('message', messageHandler)
-},1000);
-
   // Wait a while for the subscription to run. (Part of the sample only.)
-};
+
 
 const main=async(user)=>{
-  const redis=new redislab();
-  try {
-    const redislist=await redis.rpush('users',user);
-    console.log("pushed",user);
-  }
-  catch(err) {
-    console.log(err);
-  }
+  
 
 };  
 
 const datauser=async(user,txt)=>{
-  const redis=new redislab();
-
-  redis.on('connect',()=>{
-    console.log('connected to redis db-add');
-  })
-  try {
-     redis.set(user,txt);
-  }
-  catch(err) {
-    console.log(err);
-  }
+  
 
 };  
 
 const getdata=async(user)=>{
-  const redis=new redislab();
-  redis.on('connect',()=>{
-    console.log('connected to redis db');
-  })
-  try {
-     redis.get(user,(err,resp)=>{
-      if(!err) {
-        return resp;
-      }
-     });
-  }
-  catch(err) {
-    console.log(err);
-  }
-
+  
 };  
 
 const config=new Configuration({
@@ -130,7 +81,7 @@ const checkfromlist=()=>{
   var config = {
     method: 'get',
     headers: { 
-      'Authorization': 'Bearer ya29.a0AWY7CknORE3N3D2yPqU0WHaMzbT8u_8UlmJHbXOa2Vc4K10RTdF3gxFFnLm9knr3a16gY6M7UWWMjwsXC1kCnmyG5IksD0CG1JEi9wcwLxTYCL1UYWBPC16BemuBpQSDN4CMeIYV5ktaqJ7ABXcOzRpsFqFvLAaCgYKAXwSARMSFQG1tDrpP1pHkP6QLdosdthKVDG7Zg0165',
+      'Authorization': 'Bearer ya29.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',
       'Content-Type':'application/json',
       'Accept-type':'application/json'
     }
@@ -192,18 +143,36 @@ app.get('/index-path',(req,resp)=>{
 
  // const cname=req.query.name;
  console.log("entered ");
- 
- // mailpubsub("preetish@eta.tech");
- var config = {
-  method: 'get',
-  headers: { 
-    'Authorization': 'Bearer ya29.a0AWY7Ckk60f7-hszQHUwexTqkRnUdvBmlBaJanhoGBWt8STrtYAkuP5LSm9pc9mpJI_TvdviNEcu6U4VqfjluNok_VkoPX8ZnwTZR4RCFTFzAJeV336MinTy0yQZUxPpRTJfQ8rZfApnihWVaE-qTCwy2FonCpQaCgYKAVYSARMSFQG1tDrpmnliaxUUii-m3PkFKfHwPQ0165',
-    'Content-Type':'application/json',
-    'Accept-type':'application/json'
+ let accestoken_config={
+  method: 'post',
+  headers: {
+    
   }
+ };
+ var aconfig = {
+  method: 'post',
+  url: 'https://www.googleapis.com/oauth2/v3/token',
+  headers: { 
+    'Content-Type': 'application/json'
+  },
+  data : {"refresh_token": "1//0gw-2cKaI_kblCgYIARAAGBASNwF-L9IriBG8yJYO6pJ_4eT0IaBwB5ozZHUjv_rpvxwnZRicRxdW0xzP2Pm0_RZcmomj6edq_Ng",
+  "grant_type": "refresh_token",
+  "client_id": "800001409252-9ohnikgcmjje4711trvps886fv5unp1a.apps.googleusercontent.com",
+  "client_secret": "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",
+  "expires_in": "6000"}
+};
 
-};  
-      (async()=>{ 
+      
+        axios(aconfig).then(token_json=>{var token=token_json.data;console.log(JSON.stringify(token));var config = {
+          method: 'get',
+          headers: { 
+            'Authorization': `Bearer ${token.access_token}`,
+            'Content-Type':'application/json',
+            'Accept-type':'application/json'
+          }
+        
+        };  
+        (async()=>{ 
         await  fetch('https://gmail.googleapis.com/gmail/v1/users/preetish@zeta.tech/messages',config)
         .then(resp=>resp.json()).then(data=>{
           const msgs=data.messages;
@@ -214,7 +183,7 @@ app.get('/index-path',(req,resp)=>{
            // console.log(`${JSON.stringify(msg)}`)
             msgids.push(msg.id);
           }
-          
+          console.log(msgids);
           for  (let id of msgids) {
             
             let flag=false;
@@ -241,8 +210,12 @@ app.get('/index-path',(req,resp)=>{
         
        // console.log(data);
         const val=data["body"]["data"];
+        
+       let decodestring="";
+       if(val) {
        let buff_obj=Buffer.from(val,"base64");
-       let decodestring=buff_obj.toString("utf8");
+        decodestring=buff_obj.toString("utf8");
+       }
        const $=cheerio.load(decodestring);
         console.log($);
 
@@ -398,6 +371,7 @@ app.get('/index-path',(req,resp)=>{
     }
   }).catch(err=>console.log(err));
        })();
+      }).catch(err=>console.log(err));
      
 
 
@@ -409,7 +383,7 @@ app.get('/index-path',(req,resp)=>{
 
 app.get("/table",(req,resp)=>{
   console.log("table");
-  resp.status(200).sendFile('/Users/preetisharma/Documents/transcribe/transcribe.html');
+  resp.status(200).sendFile(path.join(__dirname,'./transcribe..html'));
 });
 
 app.get("/user",async (req,resp)=>{
@@ -425,9 +399,7 @@ app.get('/midpage',async (req,resp)=>{
   const name=req.query.name.replace(/%20/g,' ');
   console.log(JSON.stringify(req.body));
     
-   (async()=>{
-     await main(name);
-  })();
+   
 
 
   resp.status(200).redirect(`/dashboard?name=${name}`);
@@ -440,10 +412,10 @@ app.get('/logout',async(req,resp)=>{
 
 app.get("/dashboard", async (req,resp)=>{
   
-  if(!(fs.existsSync('/Users/preetisharma/Documents/transcribe/empdata.txt'))) {
+  if(!(fs.existsSync('./empdata.txt'))) {
       resp.status(200).redirect('/login');
   }
-  fs.readFile('/Users/preetisharma/Documents/transcribe/empdata.txt','utf8',(err,data)=>{
+  fs.readFile('./empdata.txt','utf8',(err,data)=>{
     if(err) {
       console.log(err);
     }  else {
@@ -480,26 +452,29 @@ app.get("/dashboard", async (req,resp)=>{
 });
 
 app.get("/login",async (req,resp)=>{
-  await axios.get("http://127.0.0.1:8098/index-path").then(data=>console.log(data)).catch(err=>console.log(err));
-  resp.status(200).sendFile("/Users/preetisharma/Documents/transcribe/login.html");
+  (async()=>{
+    //await main(name);
+    await axios.get("http://127.0.0.1:8098/index-path").then(data=>console.log(data)).catch(err=>console.log(err));
+ })();
+  resp.status(200).sendFile(path.join(__dirname,"./login.html"));
 });
 
 app.get("/page",(req,resp)=>{
   axios.get("http://127.0.0.1:8098/index-path").then(data=>console.log(data)).catch(err=>console.log(err));
-  resp.status(200).sendFile('/Users/preetisharma/Documents/transcribe/index.html');
+  resp.status(200).sendFile(path.join(__dirname,'./index..html'));
 });
 
 app.get("/rank-data",(req,resp)=>{
-  resp.status(200).sendFile('/Users/preetisharma/Documents/transcribe/rank.html');
+  resp.status(200).sendFile(path.join(__dirname,'./rank..html'));
 });
 
 app.get("/langchain",(req,resp)=>{
-  resp.status(200).sendFile('/Users/preetisharma/Documents/transcribe/langchain.html');
+  resp.status(200).sendFile(path.join(__dirname,'./langchain..html'));
 });
 
 app.get("/val", async (req,resp)=>{
-  const redis=new redislab();
-  const results= await redis.lrange('users',0,-1);
+ const redis=new redislab();
+  const results=[];
   console.log(results.length);
   const user_data=new Map();
   (async()=>{results.forEach(async(val)=>{
@@ -547,7 +522,7 @@ resp.status(200).send("Name registered");
 });
 
 const isthere=async(name)=>{
-const namelist=await new redislab().lrange('users',0,-1);
+const namelist=[];
 console.log(namelist.length)
 namelist.forEach(val=>{
   if(val==name) {
