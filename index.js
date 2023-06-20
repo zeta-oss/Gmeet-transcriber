@@ -7,7 +7,7 @@ const app=express();
 const fetch=require('node-fetch-commonjs');
 const redislab=require('ioredis');
 const fs=require('fs');
-const {Configuration,OpenAIApi} =require("openai");
+const {Configuration,OpenAIApi, ChatCompletionResponseMessageRoleEnum} =require("openai");
 const {PubSub}=require('@google-cloud/pubsub');
 const redis=require('redis');const { validateHeaderName } = require('http');
 
@@ -185,7 +185,15 @@ app.get('/index-path',(req,resp)=>{
           }
           console.log(msgids);
           for  (let id of msgids) {
+          //  ChatCompletionResponseMessageRoleEnum.log()
             
+            const d11=fs.readFile("abc4.txt","utf8",(rr,data)=>{
+              if(!rr) {
+                return data;
+              }
+              return undefined;
+            });
+            if(!(d11==undefined || d11.trim()=="")) break;
             let flag=false;
             if(1==1) {
               fs.readFile('./transcript.csv','utf8',(err,data)=>{
@@ -203,19 +211,22 @@ app.get('/index-path',(req,resp)=>{
         data=data.payload;
        // console.log("here header:"+JSON.stringify(data.headers));
       // console.log(headercheck(data.headers));
-        if(headercheck(data.headers)==true) {
+        if(headercheck(data.headers)==true) { 
           flag=true;
           //console.log(JSON.stringify(data));
           //console.log(id);
         
        // console.log(data);
-        const val=data["body"]["data"];
-        
+       console.log(`Here is the msg id:  ${id}`);
+       console.log(data["body"],data["parts"][0]["body"]);
+        const val=data["body"]["data"] || data["parts"][0]["body"]['data'] || data["parts"][1]["body"]['data'];
+        console.log(val);
        let decodestring="";
        if(val) {
        let buff_obj=Buffer.from(val,"base64");
         decodestring=buff_obj.toString("utf8");
        }
+       console.log(decodestring);
        const $=cheerio.load(decodestring);
         console.log($);
 
@@ -277,7 +288,11 @@ app.get('/index-path',(req,resp)=>{
             val=val.trim().replace(/[px][']/ig,'');
             val=val.trim().replace(/&nbsp;/g,'');
            val=val.substring(1000,Math.min(val.length,4000));
-
+           if(val.trim()!="") {
+            fs.writeFile("abc4.txt",val.trim(),err=>{
+              if(err) console.log(err);
+            });
+           }
             console.log(`Here it is :    ${key}---${val}`);
             if(val.trim()!=""){
               val=val.trim();
@@ -397,6 +412,7 @@ app.get("/user",async (req,resp)=>{
 app.get('/midpage',async (req,resp)=>{
 
   const name=req.query.name.replace(/%20/g,' ');
+  await main(name);
   console.log(JSON.stringify(req.body));
     
    
