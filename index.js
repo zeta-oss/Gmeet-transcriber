@@ -11,7 +11,7 @@ const {Configuration,OpenAIApi, ChatCompletionResponseMessageRoleEnum} =require(
 const {PubSub}=require('@google-cloud/pubsub');
 const redis=require('redis');const { validateHeaderName } = require('http');
 
-const openaikey=Buffer.from("c2stMHhHZmJPenVvQ1N1aTFmbnZXVnhUM0JsYmtGSmVwZm9WSFVzNTVFRkdOQU9xbUcz","base64").toString("utf8");
+const openaikey=Buffer.from("c2stQlRKeDJIcE9rYkZ3ejdDZXFjQ3lUM0JsYmtGSk94WjBxSHhMeXg4SzdTbllDQ0Za","base64").toString("utf8");
 
 app.use(express.json());
 
@@ -155,7 +155,7 @@ app.get('/index-path',(req,resp)=>{
   headers: { 
     'Content-Type': 'application/json'
   },
-  data : {"refresh_token": "1//0gw-2cKaI_kblCgYIARAAGBASNwF-L9IriBG8yJYO6pJ_4eT0IaBwB5ozZHUjv_rpvxwnZRicRxdW0xzP2Pm0_RZcmomj6edq_Ng",
+  data : {"refresh_token": "1//0grgvSs3UuD2MCgYIARAAGBASNwF-L9IrCvnIthIiOPg60am1Wbo5PiaLArh28HekT-05TA5qylQZN2S7d0gzNJ6psJHqyVQQ9Sw",
   "grant_type": "refresh_token",
   "client_id": "800001409252-9ohnikgcmjje4711trvps886fv5unp1a.apps.googleusercontent.com",
   "client_secret": "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",
@@ -173,7 +173,7 @@ app.get('/index-path',(req,resp)=>{
         
         };  
         (async()=>{ 
-        await  fetch('https://gmail.googleapis.com/gmail/v1/users/preetish@zeta.tech/messages',config)
+        await  fetch('https://gmail.googleapis.com/gmail/v1/users/preetish@zeta.tech/messages?q=from:briefly@brieflyai.com',config)
         .then(resp=>resp.json()).then(data=>{
           const msgs=data.messages;
          // console.log(`..........89guhgih8u${JSON.stringify(data)}`);
@@ -186,18 +186,15 @@ app.get('/index-path',(req,resp)=>{
           console.log(msgids);
           for  (let id of msgids) {
           //  ChatCompletionResponseMessageRoleEnum.log()
+          console.log(`...msgid ...${id}`);
+
+          
             
-            const d11=fs.readFile("abc4.txt","utf8",(rr,data)=>{
-              if(!rr) {
-                return data;
-              }
-              return undefined;
-            });
-            if(!(d11==undefined || d11.trim()=="")) break;
+            
             let flag=false;
             if(1==1) {
               fs.readFile('./transcript.csv','utf8',(err,data)=>{
-                 if(2==2) {
+                 if(data.trim()=="") {
                 
               
             
@@ -209,17 +206,20 @@ app.get('/index-path',(req,resp)=>{
       .then(response=>response.json()).then(data=>{
        // console.log(data);
         data=data.payload;
+        console.log(`.....${JSON.stringify(data.headers)
+        }`);
        // console.log("here header:"+JSON.stringify(data.headers));
       // console.log(headercheck(data.headers));
-        if(headercheck(data.headers)==true) { 
+       
+        if(true) { 
           flag=true;
           //console.log(JSON.stringify(data));
           //console.log(id);
         
        // console.log(data);
        console.log(`Here is the msg id:  ${id}`);
-       console.log(data["body"],data["parts"][0]["body"]);
-        const val=data["body"]["data"] || data["parts"][0]["body"]['data'] || data["parts"][1]["body"]['data'];
+       console.log(data["body"],(data["parts"] ? data["parts"][0]["body"]['data']:""));
+        const val=data["body"]["data"] || (data["parts"] ? data["parts"][0]["body"]['data']:"") || (data["parts"] ? data["parts"][1]["body"]['data']:"");
         console.log(val);
        let decodestring="";
        if(val) {
@@ -259,11 +259,14 @@ app.get('/index-path',(req,resp)=>{
                     }
                    // console.log("FFOUND!");
                   }
-                  if(found_name) {
+                  if(tables.substring(i,i+val.length).indexOf(val)>-1)
+                  console.log(`subteable... ${tables.substring(i,i+val.length)}`);
+                  if(tables.substring(i,i+val.length).indexOf(val)>-1) {
                   //  console.log(`FOUND-${val}`);
                     const subtable=tables.substring(i);
                     if(subtable.split(":")[1]) {
                     const text_added=subtable.split(":")[1].replace(/(<([^>]+)>)/ig,'');
+                    console.log(` resulttttt......${text_added}`)
                     user_data.set(val,user_data.get(val)+text_added);
                     }
                   }
@@ -278,6 +281,7 @@ app.get('/index-path',(req,resp)=>{
           let rowsdata=`<tr>`;
           let rankdata=`<ul>`;
           let dval='';
+          
           for(let [key,val] of user_data) {
             key=key.trim().replace(/ /ig,'');
             val=val.trim().replace(/[0-9]/ig,'');
@@ -331,13 +335,14 @@ app.get('/index-path',(req,resp)=>{
           headertable+="</tr>";
           rowsdata+=`</tr>`;
           htmlres=htmlres+headertable+rowsdata+"</table>";
-          let ftxtres='';
+          let ftxtres='',edatalen='';
           for(var i=0;i<headers1.length;i++) {
-            ftxtres+=`${headers1[i]} : ${rows1[i]} == ${rows1[i].length}\n`;
+            edatalen+=`${headers1[i].trim()}:${rows1[i].length}\n`;
+            ftxtres+=`${headers1[i].trim()} : ${rows1[i].trim()} == ${rows1[i].length}\n`;
           }
           const headersstr=headers1.join(",");
           const rowsstr=rows1.join(",");
-          fs.writeFileSync(`empdata${ftxtres.length}.txt`,ftxtres,'utf8',(err)=>{
+          fs.writeFileSync(`empdata.txt`,edatalen,'utf8',(err)=>{
             if(err) {
               console.log(err);
             }
@@ -354,7 +359,7 @@ app.get('/index-path',(req,resp)=>{
             }
           });
           let csvrows=`${headersstr}\n${rowsstr}`;
-          fs.writeFileSync(`transcript${ftxtres.length}.csv`,csvrows,'utf8',(err)=>{
+          fs.writeFileSync(`transcript.csv`,csvrows,'utf8',(err)=>{
             if(err) {
               console.log(err);
             }
@@ -438,24 +443,23 @@ app.get("/dashboard", async (req,resp)=>{
       //console.log(data);
       let scores=[];
       const dataarr=data.split("\n");
-      for(var i=0;i<Math.min(3,dataarr.length);i++) {
+      console.log(`data is : ${dataarr}`);
+      for(var i=0;i<dataarr.length;i++) {
         const line=dataarr[i].split(":");
         //console.log(line);
         if(line.length==1) 
         {
           continue;
         }
-        const lineres=line[1].split("==");
         const name=line[0];
-       
-        const text=lineres[0].trim();
-        //console.log(text);
-        scores.push([name,text]);
+        console.log(line[1]);
+        
+        scores.push([line[0].trim(),parseInt(line[1].trim())]);
       }
       scores.sort((a,b)=>{
         return a[1].length>b[1].length;
       });
-      console.log(`...${scores}`)
+      console.log(`.oppo..${scores}`)
       const styles=["work","play","study"];
       resp.status(200).render('dashboard.ejs',{
         scores:scores,
